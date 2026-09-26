@@ -85,3 +85,5 @@ same way.
   later.
 - **Plain CSS, no framework lock-in** so a future developer isn't fighting a
   design system to make changes.
+
+_Redeployed with database connected._
