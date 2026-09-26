@@ -1,16 +1,16 @@
-// Seeds the local database with clearly-marked example records,
-// so the app isn't a blank page the first time you run it.
+// Seeds the database with two clearly-marked example records,
+// so the app isn't a blank page the first time you open it.
 // Run with: npm run seed
 
-import { db, createWorker, createPlacement } from "../lib/db.js";
+import { countExampleWorkers, createWorker, createPlacement } from "../lib/db.js";
 
-const existing = db.prepare("SELECT COUNT(*) AS n FROM workers WHERE is_example = 1").get();
-if (existing.n > 0) {
+const existing = await countExampleWorkers();
+if (existing > 0) {
   console.log("Example records already present. Skipping seed.");
   process.exit(0);
 }
 
-const w1 = createWorker({
+const w1 = await createWorker({
   name: "Example: Uwase Claudine",
   phone: "0788 000 111",
   idLast4: "0142",
@@ -21,7 +21,7 @@ const w1 = createWorker({
   isExample: true,
 });
 
-createPlacement({
+await createPlacement({
   workerId: w1.id,
   household: "Example Household — the Nzeyimana family",
   startDate: "2024-03-01",
@@ -30,7 +30,7 @@ createPlacement({
   familyNotes: "Reliable, great with the children, sorry to see her go.",
 });
 
-createPlacement({
+await createPlacement({
   workerId: w1.id,
   household: "Example Household — the Uwimana family",
   startDate: "2025-11-20",
@@ -39,7 +39,7 @@ createPlacement({
   familyNotes: "Current placement.",
 });
 
-createWorker({
+await createWorker({
   name: "Example: Mukamana Immaculee",
   phone: "0722 000 222",
   idLast4: "0987",
@@ -51,3 +51,4 @@ createWorker({
 });
 
 console.log("Seeded example records.");
+process.exit(0);

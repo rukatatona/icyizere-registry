@@ -22,9 +22,10 @@ A real, working full-stack app — not a mockup:
   placement timeline you can add to
 - **Add Worker** (`/add`) — the intake form for a first-time verification
 
-Data is stored in a real SQLite database on disk (`data/registry.db`), via
-[better-sqlite3](https://github.com/WiseLibs/better-sqlite3). No external
-service, no API keys needed to run it locally.
+Data is stored in a real database — SQLite on disk (`data/registry.db`) for
+local development, or Postgres automatically when a `POSTGRES_URL` /
+`DATABASE_URL` environment variable is present (this is how it runs on
+Vercel). No external service or API keys needed to run it locally.
 
 ## Running it locally
 
@@ -53,23 +54,27 @@ lib/db.js                  SQLite schema + queries
 scripts/seed.js             Loads example records
 ```
 
-## Deploying this for real
+## Deploying to Vercel
 
-SQLite works well for the pilot (you and your on-the-ground verifier using
-this day to day), but it lives on one machine's disk, so it doesn't survive
-on serverless hosts like Vercel, which reset the filesystem between
-requests. Two straightforward paths once you're ready to put this on a real
-domain:
+This project is set up to deploy on Vercel with a real Postgres database —
+no separate signup needed, it's built into Vercel's dashboard:
 
-1. **A host with a persistent disk** — Render, Fly.io, or a small VPS. The
-   app runs as-is; you just need a volume mounted at `data/`.
-2. **Swap in a hosted database** — point `lib/db.js` at a free-tier hosted
-   Postgres (e.g. Supabase or Neon) instead of SQLite once you have real
-   users and want something more robust. The rest of the app (routes, pages)
-   doesn't need to change — only the queries in `lib/db.js`.
+1. Push this repo to GitHub (if it isn't already) and import it at
+   [vercel.com/new](https://vercel.com/new).
+2. In the project's **Storage** tab, click **Create Database → Postgres**
+   and connect it to this project. Vercel adds the `POSTGRES_URL` (and
+   related) environment variables for you automatically.
+3. Redeploy. The app detects `POSTGRES_URL` and switches from SQLite to
+   Postgres automatically — see `lib/db.js`.
+4. To load the two example records into the new database, run
+   `npm run seed` once locally with `POSTGRES_URL` set in your shell to the
+   value Vercel gives you (Project → Storage → your database → `.env.local`
+   tab has the exact value to copy).
 
-Either way, the codebase is yours: no Claude or Anthropic dependency, no
-platform lock-in, nothing to migrate off of later.
+The codebase is yours either way: no Claude or Anthropic dependency, no
+platform lock-in, nothing to migrate off of later. If you ever want to move
+off Vercel, any host that gives you a Postgres connection string works the
+same way.
 
 ## Why this shape
 

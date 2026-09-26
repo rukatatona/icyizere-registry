@@ -2,9 +2,9 @@ import { listWorkers, listAllPlacements } from "../lib/db";
 
 export const dynamic = "force-dynamic";
 
-export default function OverviewPage() {
-  const workers = listWorkers();
-  const placements = listAllPlacements();
+export default async function OverviewPage() {
+  const workers = await listWorkers();
+  const placements = await listAllPlacements();
 
   const stats = {
     total: workers.length,

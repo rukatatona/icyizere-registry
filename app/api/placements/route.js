@@ -11,11 +11,11 @@ export async function POST(request) {
     );
   }
 
-  const worker = getWorker(body.workerId);
+  const worker = await getWorker(body.workerId);
   if (!worker) {
     return NextResponse.json({ error: "Worker not found." }, { status: 404 });
   }
 
-  const placement = createPlacement(body);
+  const placement = await createPlacement(body);
   return NextResponse.json({ placement }, { status: 201 });
 }

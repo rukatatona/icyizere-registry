@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { listWorkers, createWorker } from "../../../lib/db";
 
 export async function GET() {
-  const workers = listWorkers();
+  const workers = await listWorkers();
   return NextResponse.json({ workers });
 }
 
@@ -16,6 +16,6 @@ export async function POST(request) {
     );
   }
 
-  const worker = createWorker(body);
+  const worker = await createWorker(body);
   return NextResponse.json({ worker }, { status: 201 });
 }

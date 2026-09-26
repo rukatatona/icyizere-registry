@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { listWorkers, listAllPlacements } from "../../../lib/db";
 
 export async function GET() {
-  const workers = listWorkers();
-  const placements = listAllPlacements();
+  const workers = await listWorkers();
+  const placements = await listAllPlacements();
 
   const stats = {
     total: workers.length,
